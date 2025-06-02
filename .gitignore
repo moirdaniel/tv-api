@@ -142,11 +142,11 @@ yarn-debug.log
 yarn-error.log
 
 # Docker
-Dockerfile
-.dockerignore
+# Dockerfile
+# .dockerignore
 
 # Entorno
-.env
+# .env
 
 # IDEs y editores
 .vscode
