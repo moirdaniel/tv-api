@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  tv-api:
+    build: .
+    container_name: tv-api-container
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    restart: unless-stopped
