@@ -4,22 +4,28 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // Conexión a MongoDB
-const mongoUri = process.env.MONGO_URI || 'mongodb://admin:supersecurepassword@192.168.1.100:27017/tvapp?authSource=admin';
+const mongoUri = process.env.MONGO_URI;
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(() => console.log('✅ Conectado a MongoDB'))
-  .catch(err => console.error('❌ Error al conectar a MongoDB:', err));
+})
+.then(() => console.log('✅ Conectado a MongoDB'))
+.catch(err => console.error('❌ Error al conectar a MongoDB:', err));
 
-// Modelo
+// Modelo de datos
 const channelSchema = new mongoose.Schema({
   id: Number,
   name: String,
@@ -27,7 +33,8 @@ const channelSchema = new mongoose.Schema({
   logoUrl: String,
   enabled: Boolean,
   category: [String]
-});
+}, { collection: 'channels' });
+
 const Channel = mongoose.model('Channel', channelSchema);
 
 /**
@@ -214,7 +221,7 @@ app.delete('/api/channels/:id', async (req, res) => {
   }
 });
 
-// 🚀 Configuración Swagger
+// Swagger setup
 if (process.env.ENABLE_SWAGGER === 'true') {
   const swaggerDefinition = {
     openapi: '3.0.0',
@@ -223,28 +230,22 @@ if (process.env.ENABLE_SWAGGER === 'true') {
       version: '1.0.0',
       description: 'API para gestionar canales de TV'
     },
-    servers: [
-      {
-        url: `http://localhost:${process.env.PORT || 3001}`,
-        description: 'Servidor local'
-      }
-    ]
+    servers: [{ url: `http://localhost:${process.env.PORT || 3001}`, description: 'Servidor local' }]
   };
 
   const options = {
     swaggerDefinition,
-    apis: ['./server.js']
+    apis: [path.join(__dirname, 'server.js')]
   };
 
   const swaggerSpec = swaggerJSDoc(options);
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   console.log('🔎 Swagger UI habilitado en /api-docs');
-} else {
-  console.log('🔒 Swagger UI está deshabilitado');
 }
 
-// 🚀 Puerto configurable desde variable de entorno
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`🚀 API corriendo en http://localhost:${PORT}/api/channels`));
+app.listen(PORT, () => {
+  console.log(`🚀 API corriendo en http://localhost:${PORT}/api/channels`);
+});
 
 export default app;
