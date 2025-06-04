@@ -7,7 +7,7 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - MONGO_URI=mongodb://admin:password@192.168.1.100:27017/tvapp
+      - MONGO_URI=mongodb+srv://dmoir:zsedcx.123.zx@cluster0.iqrs2ax.mongodb.net/tvapp?retryWrites=true&w=majority&appName=Cluster0
       - PORT=3001
       - ENABLE_SWAGGER=true
     restart: unless-stopped
