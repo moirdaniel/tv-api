@@ -11,3 +11,18 @@ services:
       - PORT=3001
       - ENABLE_SWAGGER=true
     restart: unless-stopped
+    networks:
+      - tv-network
+
+  cloudflared-api:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-api-tv
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token eyJhIjoiOWExOGZhZjlkM2I1MWRkOTM4ODhhNmYzNTY3MzdjNzEiLCJ0IjoiYjM3ODkxMzUtMjI2Mi00ZTYwLWE0NDktYzc0MWUzNTA4MmI0IiwicyI6IlpXRTJOemM0TXprdFpqY3hNUzAwTWpobUxUZ3paV010WXpKbU0yUXpOVEUxTlRjeSJ9
+    networks:
+      - tv-network
+
+networks:
+  tv-network:
+    name: tv-network
+    driver: bridge
