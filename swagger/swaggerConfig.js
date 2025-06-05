@@ -9,8 +9,8 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: process.env.API_BASE_URL || `http://localhost:${process.env.PORT || 3001}`,
-      description: 'Servidor principal'
+        url: 'https://tv-api.moir.cl', 
+        description: 'Producción'
     }
   ]
 };
